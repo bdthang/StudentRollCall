@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "875354901978",
+    "project_id": "studentrollcall-96e3d",
+    "storage_bucket": "studentrollcall-96e3d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:875354901978:android:22b9a25fe649a1582744e3",
+        "android_client_info": {
+          "package_name": "com.example.studentrollcall"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "875354901978-6ivhefjnu4ssi7977j8dg0k1k21rd4s8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWuequSrybb6IOkgo2vdY7aIT4BWIxAGE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "875354901978-6ivhefjnu4ssi7977j8dg0k1k21rd4s8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
