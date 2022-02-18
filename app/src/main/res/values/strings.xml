@@ -1,4 +1,20 @@
 <resources>
     <string name="app_name">StudentRollCall</string>
     <string name="table_header">STT</string>
+    <string name="logo">Logo</string>
+    <string name="email">Email</string>
+    <string name="password">Mật khẩu</string>
+    <string name="login">Đăng nhập</string>
+    <string name="register">Đăng ký</string>
+    <string name="password_confirmation">Xác nhận mật khẩu</string>
+    <string name="password_forgot">Quên mật khẩu?</string>
+    <string name="password_recover_confirmation">Lấy lại mật khẩu</string>
+    <string name="required">Bắt buộc</string>
+    <string name="invalid_email">Email không hợp lệ</string>
+    <string name="short_password">Mật khẩu cần ít nhất 6 ký tự</string>
+    <string name="wrong_information">Vui lòng nhập chính xác các thông tin</string>
+    <string name="failed_password_confirmation">Mật khẩu xác nhận sai.</string>
+    <string name="name">Họ tên</string>
+    <string name="successful_registration">Đăng ký tài khoản thành công</string>
+    <string name="failed_registration">Đăng ký thất bại</string>
 </resources>

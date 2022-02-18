@@ -13,6 +13,7 @@ import com.example.studentrollcall.R
 import com.example.studentrollcall.databinding.FragmentClassBinding
 import com.example.studentrollcall.model.Class
 import com.example.studentrollcall.viewmodel.EntryViewModel
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch

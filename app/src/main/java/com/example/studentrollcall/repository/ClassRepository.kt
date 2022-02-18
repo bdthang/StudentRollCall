@@ -8,8 +8,9 @@ class ClassRepository(private val onFirestoreTaskComplete: OnFirestoreTaskComple
     private val db = FirebaseFirestore.getInstance()
     private val classRef = db.collection("classes")
 
-    fun loadClassData() {
-        classRef.addSnapshotListener { value, error ->
+    fun loadClassData(classes: ArrayList<String>) {
+        classRef.whereIn("__name__", classes)
+            .addSnapshotListener { value, error ->
             if (error != null) {
                 onFirestoreTaskComplete.onError(error)
                 return@addSnapshotListener

@@ -8,19 +8,50 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.studentrollcall.fragment.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        android:label="Danh sách lớp"
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_classFragment"
             app:destination="@id/classFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/classFragment"
         android:name="com.example.studentrollcall.fragment.ClassFragment"
-        android:label="fragment_class"
-        tools:layout="@layout/fragment_class" >
+        android:label="Chi tiết lớp"
+        tools:layout="@layout/fragment_class">
         <argument
             android:name="classToEdit"
             app:argType="com.example.studentrollcall.model.Class" />
     </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.studentrollcall.fragment.LoginFragment"
+        android:label="Đăng nhập"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_recoverPasswordFragment"
+            app:destination="@id/recoverPasswordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.studentrollcall.fragment.RegisterFragment"
+        android:label="Đăng ký tài khoản"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/recoverPasswordFragment"
+        android:name="com.example.studentrollcall.fragment.RecoverPasswordFragment"
+        android:label="fragment_recover_password"
+        tools:layout="@layout/fragment_recover_password" />
 </navigation>
