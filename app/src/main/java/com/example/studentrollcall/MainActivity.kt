@@ -5,6 +5,11 @@ import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.studentrollcall.adapter.ClassAdapter
 import com.example.studentrollcall.databinding.ActivityMainBinding
 import com.example.studentrollcall.viewmodel.ClassViewModel
@@ -14,8 +19,9 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var classAdapter: ClassAdapter
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     val TAG = "MainActivity"
 
@@ -25,19 +31,22 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        setupRecyclerView()
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.findNavController()
+
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.homeFragment,
+//                R.id.loginFragment
+            )
+        )
+
+        setSupportActionBar(binding.toolbar)
+        setupActionBarWithNavController(navController, appBarConfiguration)
     }
 
-    private fun setupRecyclerView() {
-        classAdapter = ClassAdapter()
-        binding.recyclerView.setHasFixedSize(true)
-        binding.recyclerView.adapter = classAdapter
-
-        val classViewModel = ViewModelProvider(this).get(ClassViewModel::class.java)
-        classViewModel.getClassData().observe(this) {
-            classAdapter.classes = it
-            classAdapter.notifyDataSetChanged()
-            Log.d(TAG, "$it")
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.studentrollcall.model.Class
+import com.example.studentrollcall.repository.ClassRepository
 
 class ClassViewModel: ViewModel(), ClassRepository.OnFirestoreTaskComplete {
     private val repo = ClassRepository(this)

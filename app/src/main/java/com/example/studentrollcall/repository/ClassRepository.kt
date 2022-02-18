@@ -1,6 +1,5 @@
-package com.example.studentrollcall.viewmodel
+package com.example.studentrollcall.repository
 
-import android.util.Log
 import com.example.studentrollcall.model.Class
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -10,13 +9,6 @@ class ClassRepository(private val onFirestoreTaskComplete: OnFirestoreTaskComple
     private val classRef = db.collection("classes")
 
     fun loadClassData() {
-//        classRef.get()
-//            .addOnSuccessListener {
-//                onFirestoreTaskComplete.classListDataAdded(it.toObjects(Class::class.java) as ArrayList<Class>)
-//            }
-//            .addOnFailureListener {
-//                onFirestoreTaskComplete.onError(it)
-//            }
         classRef.addSnapshotListener { value, error ->
             if (error != null) {
                 onFirestoreTaskComplete.onError(error)
