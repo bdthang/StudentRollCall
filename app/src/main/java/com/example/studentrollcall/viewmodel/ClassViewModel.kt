@@ -11,10 +11,23 @@ class ClassViewModel : ViewModel(), ClassRepository.OnFirestoreTaskComplete {
     private val repo = ClassRepository(this)
     private val classes = MutableLiveData<ArrayList<Class>>()
     private val mapOfClasses = emptyMap<Int, ArrayList<Class>>().toMutableMap()
+    private val classOperationReturnCode = MutableLiveData<Int>()
 
     fun getClassData(): LiveData<ArrayList<Class>> {
         repo.loadClassData()
         return classes
+    }
+
+    fun addClass(_class: Class): MutableLiveData<Int> {
+        classOperationReturnCode.value = -1
+        repo.addClass(_class)
+        return classOperationReturnCode
+    }
+
+    fun updateClass(_class: Class, oldShortId: String): MutableLiveData<Int> {
+        classOperationReturnCode.value = -1
+        repo.updateClass(_class, oldShortId)
+        return classOperationReturnCode
     }
 
     override fun emptyClassListData() {
@@ -26,14 +39,6 @@ class ClassViewModel : ViewModel(), ClassRepository.OnFirestoreTaskComplete {
     }
 
     override fun classListDataUpdated(totalChunk:Int, chunkNum: Int, classes: ArrayList<Class>) {
-//        val originalClassList = ArrayList<Class>()
-//        this.classes.value?.let { originalClassList.addAll(it) }
-
-//        val array = arrayOfNulls<Class>(totalSize)
-//        classes.toArray().forEach {
-//            Log.d(TAG, it.toString())
-//        }
-
         mapOfClasses[chunkNum] = classes
 
         if (mapOfClasses.size == totalChunk) {
@@ -43,22 +48,17 @@ class ClassViewModel : ViewModel(), ClassRepository.OnFirestoreTaskComplete {
             }
             this.classes.value = list
         }
-
-
-        // Fill array with class data
-        // Convert list of classes to array first.
-
-//        val modifiedClassList = ArrayList<Class>()
-//        this.classes.value?.let { modifiedClassList.addAll(it) }
-//        classes.forEachIndexed { index, _class ->
-//            modifiedClassList[(chunkNum * 10) + index] = _class
-//        }
-//        this.classes.value = modifiedClassList
-//        Log.d(TAG, this.classes.value.toString())
-//        Log.d(TAG, modifiedClassList.toString())
     }
 
     override fun classListDataCreated() {
         mapOfClasses.clear()
+    }
+
+    override fun classExisted() {
+        this.classOperationReturnCode.value = 1
+    }
+
+    override fun classUpdatedSuccessfully() {
+        this.classOperationReturnCode.value = 0
     }
 }

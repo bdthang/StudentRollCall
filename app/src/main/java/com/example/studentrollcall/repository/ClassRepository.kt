@@ -23,28 +23,50 @@ class ClassRepository(private val onFirestoreTaskComplete: OnFirestoreTaskComple
                 if (error != null) {
                     onFirestoreTaskComplete.onError(error)
                 } else {
-                    if (value != null){
+                    if (value != null) {
                         onFirestoreTaskComplete.classListDataCreated()
 
                         val user: User = value.toObject(User::class.java) as User
-                        val classes = user.classes
-                        if (classes.isNotEmpty()) {
-                            val classChunked = classes.chunked(10)
 
-                            classChunked.forEachIndexed { index, it ->
-                                classRef.whereIn("__name__", it)
-                                    .addSnapshotListener { value, error ->
-                                        if (error != null) {
-                                            onFirestoreTaskComplete.onError(error)
-                                        } else {
-                                            onFirestoreTaskComplete.classListDataUpdated(classChunked.size, index, value!!.toObjects(Class::class.java) as ArrayList<Class>)
+                        // If user is student
+                        if (!user.teacher) {
+                            val classes = user.classes
+                            if (classes.isNotEmpty()) {
+                                val classChunked = classes.chunked(10)
+
+                                classChunked.forEachIndexed { index, it ->
+                                    classRef.whereIn("__name__", it)
+                                        .addSnapshotListener { value, error ->
+                                            if (error != null) {
+                                                onFirestoreTaskComplete.onError(error)
+                                            } else {
+                                                onFirestoreTaskComplete.classListDataUpdated(
+                                                    classChunked.size,
+                                                    index,
+                                                    value!!.toObjects(Class::class.java) as ArrayList<Class>
+                                                )
+                                            }
                                         }
-                                    }
-                            }
+                                }
 
-                        } else {
-                            onFirestoreTaskComplete.emptyClassListData()
+                            } else {
+                                onFirestoreTaskComplete.emptyClassListData()
+                            }
+                        } else if (user.teacher) {
+                            classRef.whereEqualTo("authorId", user.uid)
+                                .addSnapshotListener { value2, error2 ->
+                                    if (error2 != null) {
+                                        onFirestoreTaskComplete.onError(error2)
+                                    } else {
+                                        onFirestoreTaskComplete.classListDataUpdated(
+                                            1,
+                                            0,
+                                            value2!!.toObjects(Class::class.java) as ArrayList<Class>
+                                        )
+                                    }
+                                }
                         }
+
 
                     }
 
@@ -55,10 +77,47 @@ class ClassRepository(private val onFirestoreTaskComplete: OnFirestoreTaskComple
 
     }
 
+    fun addClass(_class: Class) {
+        _class.authorId = auth.currentUser!!.uid
+
+        classRef.whereEqualTo("shortId", _class.shortId).get()
+            .addOnSuccessListener {
+                if (it.isEmpty) { // If short id not exist yet, add
+                    classRef.add(_class)
+                    onFirestoreTaskComplete.classUpdatedSuccessfully()
+                } else {
+                    onFirestoreTaskComplete.classExisted()
+                }
+            }
+    }
+
+    fun updateClass(_class: Class, oldShortId: String) {
+        classRef.whereEqualTo("shortId", _class.shortId).get()
+            .addOnSuccessListener {
+                // If short id not exist yet or same, update
+                if (it.isEmpty) {
+                    classRef.document(_class.uid).set(_class)
+                    onFirestoreTaskComplete.classUpdatedSuccessfully()
+                } else if (it.size() == 1) {
+                    val classes: ArrayList<Class> = it.toObjects(Class::class.java) as ArrayList<Class>
+                    if (classes[0].shortId == oldShortId) {
+                        classRef.document(_class.uid).set(_class)
+                        onFirestoreTaskComplete.classUpdatedSuccessfully()
+                    } else {
+                        onFirestoreTaskComplete.classExisted()
+                    }
+                } else {
+                    onFirestoreTaskComplete.classExisted()
+                }
+            }
+    }
+
     interface OnFirestoreTaskComplete {
         fun emptyClassListData()
         fun onError(e: Exception)
         fun classListDataUpdated(totalChunk: Int, chunkNum: Int, classes: ArrayList<Class>)
         fun classListDataCreated()
+        fun classExisted()
+        fun classUpdatedSuccessfully()
     }
 }

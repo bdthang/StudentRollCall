@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">StudentRollCall</string>
+    <string name="app_name">Điểm danh</string>
     <string name="table_header">STT</string>
     <string name="logo">Logo</string>
     <string name="email">Email</string>
@@ -21,4 +21,27 @@
     <string name="logout">Đăng xuất</string>
     <string name="profile">Hồ sơ</string>
     <string name="successful_login">Đăng nhập thành công</string>
+    <string name="role">Vai trò</string>
+    <string name="student">Sinh viên</string>
+    <string name="teacher">Giáo viên</string>
+    <string name="cancel">Hủy</string>
+    <string name="ok">OK</string>
+    <string name="add_class">Thêm lớp học</string>
+    <string name="add_class_id">Nhập ID cho lớp</string>
+    <string name="no_class">Không có lớp mã</string>
+    <string name="class_added">Đã thêm lớp học</string>
+    <string name="class_id">Mã số lớp</string>
+    <string name="class_title">Tên lớp</string>
+    <string name="description">Mô tả</string>
+    <string name="time_limit">Giới hạn thời gian</string>
+    <string name="minute">phút</string>
+    <string name="delete_class">Xóa lớp</string>
+    <string name="class_explanation">Các thông số của lớp:\n • Mã số lớp: mã số để sinh viên có thể thêm lớp.\n • Tên lớp: Tên lớp.\n • Mô tả: Thông tin mô tả lớp.\n • Giới hạn thời gian: Giới hạn thời gian điểm danh của mỗi buổi học.</string>
+    <string name="confirm">Xác nhận</string>
+    <string name="class_existed">ID của lớp đã tồn tại</string>
+
+    <string-array name="role">
+        <item>Sinh viên</item>
+        <item>Giáo viên</item>
+    </string-array>
 </resources>

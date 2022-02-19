@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentrollcall.databinding.ItemClassBinding
+import com.example.studentrollcall.fragment.HomeFragmentDirections
 import com.example.studentrollcall.model.Class
 
 class ClassAdapter(private val listener: OnItemClickListener) : ListAdapter<Class, ClassAdapter.ViewHolder>(DiffCallback()) {
@@ -34,6 +35,13 @@ class ClassAdapter(private val listener: OnItemClickListener) : ListAdapter<Clas
         fun bind(_class: Class) {
             binding.apply {
                 tvTitle.text = _class.title
+                tvDescription.text = _class.description
+                buttonMore.setOnClickListener {
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.onItemOptionClick(getItem(position))
+                    }
+                }
             }
         }
     }
@@ -51,6 +59,7 @@ class ClassAdapter(private val listener: OnItemClickListener) : ListAdapter<Clas
 
     interface OnItemClickListener {
         fun onItemClick(_class: Class)
+        fun onItemOptionClick(_class: Class)
     }
 
 }

@@ -8,5 +8,6 @@ data class User(
     @DocumentId
     val uid: String = "",
     val name: String = "user_name",
+    val teacher: Boolean = false,
     val classes: ArrayList<String> = ArrayList()
 )

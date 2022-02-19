@@ -12,6 +12,7 @@ class UserViewModel : ViewModel(), UserRepository.OnUserOperationComplete {
     private val userStatus = MutableLiveData<Boolean>()
     private val loginOperationReturnCode = MutableLiveData<Int>()
     private val registerOperationReturnCode = MutableLiveData<Int>()
+    private val addClassOperationReturnCode = MutableLiveData<Int>()
 
     fun createUser(newUser: User, email: String, pwd: String): MutableLiveData<Int> {
         registerOperationReturnCode.value = -1
@@ -25,9 +26,8 @@ class UserViewModel : ViewModel(), UserRepository.OnUserOperationComplete {
         return loginOperationReturnCode
     }
 
-    fun logout(): MutableLiveData<Boolean> {
+    fun logout() {
         repo.logout()
-        return userStatus
     }
 
     fun getUserData(): MutableLiveData<User> {
@@ -38,6 +38,12 @@ class UserViewModel : ViewModel(), UserRepository.OnUserOperationComplete {
     fun getUserStatus(): MutableLiveData<Boolean> {
         repo.loadUserStatus()
         return userStatus
+    }
+
+    fun studentAddClass(classShortId: String): MutableLiveData<Int> {
+        addClassOperationReturnCode.value = -1
+        repo.studentAddClass(classShortId)
+        return addClassOperationReturnCode
     }
 
     override fun userNotLogin() {
@@ -73,6 +79,14 @@ class UserViewModel : ViewModel(), UserRepository.OnUserOperationComplete {
 
     override fun onLogout() {
         this.userStatus.value = false
+    }
+
+    override fun classAddedSuccessful() {
+        this.addClassOperationReturnCode.value = 0
+    }
+
+    override fun classAddedFail() {
+        this.addClassOperationReturnCode.value = 1
     }
 
 }

@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_classFragment"
             app:destination="@id/classFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_addEditClassFragment"
+            app:destination="@id/addEditClassFragment" />
     </fragment>
     <fragment
         android:id="@+id/classFragment"
@@ -52,4 +55,14 @@
         android:name="com.example.studentrollcall.fragment.RecoverPasswordFragment"
         android:label="fragment_recover_password"
         tools:layout="@layout/fragment_recover_password" />
+    <fragment
+        android:id="@+id/addEditClassFragment"
+        android:name="com.example.studentrollcall.fragment.AddEditClassFragment"
+        android:label="Tạo, sửa lớp"
+        tools:layout="@layout/fragment_add_edit_class">
+        <argument
+            android:name="classToEdit"
+            app:argType="com.example.studentrollcall.model.Class"
+            app:nullable="true" />
+    </fragment>
 </navigation>

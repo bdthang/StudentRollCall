@@ -36,7 +36,7 @@ fun validPasswordConfirmation(pwd: String, otherPwd: String): String? {
     return null
 }
 
-fun validName(name: String): String? {
+fun validNotBlank(name: String): String? {
     if (name.isBlank()) {
         return App.instance.getString(R.string.required)
     }

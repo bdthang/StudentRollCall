@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -35,7 +36,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             etName.setOnFocusChangeListener { _, focused ->
                 if (!focused) {
                     val name = etName.text.toString().trim()
-                    nameContainer.helperText = validName(name)
+                    nameContainer.helperText = validNotBlank(name)
                 }
             }
 
@@ -61,6 +62,10 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 }
             }
 
+            val roles = resources.getStringArray(R.array.role)
+            val arrayAdapter = ArrayAdapter(requireContext(), R.layout.item_dropdown, roles)
+            atvRole.setAdapter(arrayAdapter)
+
             buttonRegister.setOnClickListener {
                 register()
             }
@@ -75,7 +80,8 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         val pwdConfirm = binding.etPasswordConfirmation.text.toString()
         binding.passwordConfirmationContainer.helperText = validPasswordConfirmation(pwdConfirm, pwd)
         val name = binding.etName.text.toString().trim()
-        binding.nameContainer.helperText = validName(name)
+        binding.nameContainer.helperText = validNotBlank(name)
+        val role = binding.atvRole.text.toString().trim() == resources.getString(R.string.teacher)
 
         val validEmail = binding.emailContainer.helperText == null
         val validPassword = binding.passwordContainer.helperText == null
@@ -83,7 +89,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         val validName = binding.nameContainer.helperText == null
 
         if (validEmail && validPassword && validConfirmationPassword && validName) {
-            val newUser = User("", name)
+            val newUser = User("", name, role)
             userViewModel.createUser(newUser, email, pwd).observe(viewLifecycleOwner) { result ->
                 if (result == 0) {
                     Snackbar.make(requireView(), getString(R.string.successful_registration), Snackbar.LENGTH_SHORT).show()

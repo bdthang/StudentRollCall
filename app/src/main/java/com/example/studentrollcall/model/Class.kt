@@ -10,7 +10,10 @@ data class Class(
     @Exclude
     @DocumentId
     val uid: String = "",
-    val title: String = "",
+    val title: String = "Name",
     val shortId: String = "",
-    val currentSession: Int = 1
+    val description: String = "Description",
+    val timeLimit: Int = 30,
+    val currentSession: Int = 1,
+    var authorId: String = "",
 ) : Parcelable

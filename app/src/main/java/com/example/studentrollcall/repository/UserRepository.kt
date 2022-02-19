@@ -1,5 +1,6 @@
 package com.example.studentrollcall.repository
 
+import com.example.studentrollcall.model.Class
 import com.example.studentrollcall.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -9,6 +10,7 @@ class UserRepository(private val onUserOperationComplete: OnUserOperationComplet
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
     private val userRef = db.collection("users")
+    private val classRef = db.collection("classes")
 
     fun loadUserData() {
         val currentUser = auth.currentUser
@@ -69,6 +71,38 @@ class UserRepository(private val onUserOperationComplete: OnUserOperationComplet
         }
     }
 
+    fun studentAddClass(classShortId: String) {
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            userRef.document(currentUser.uid).get().addOnSuccessListener {
+                if (it != null) {
+                    val user: User = it.toObject(User::class.java)!!
+
+                    classRef.whereEqualTo("shortId", classShortId)
+                        .limit(1)
+                        .get()
+                        .addOnSuccessListener { classesQuery ->
+                            if (classesQuery.isEmpty) {
+                                // No such class
+                                onUserOperationComplete.classAddedFail()
+                            } else {
+                                val classes = classesQuery.toObjects(Class::class.java)
+                                val _class = classes[0]
+
+                                if (!user.classes.contains(_class.uid)) {
+                                    user.classes.add(_class.uid)
+                                    userRef.document(currentUser.uid).set(user)
+                                }
+                                onUserOperationComplete.classAddedSuccessful()
+                            }
+
+                        }
+                }
+
+            }
+        }
+    }
+
     interface OnUserOperationComplete {
         fun userNotLogin()
         fun userCreationSuccessful()
@@ -78,5 +112,7 @@ class UserRepository(private val onUserOperationComplete: OnUserOperationComplet
         fun userDataLoaded(user: User)
         fun onError(e: Exception)
         fun onLogout()
+        fun classAddedSuccessful()
+        fun classAddedFail()
     }
 }
