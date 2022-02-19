@@ -9,12 +9,25 @@ import java.lang.Exception
 class UserViewModel : ViewModel(), UserRepository.OnUserOperationComplete {
     private val repo = UserRepository(this)
     private val user = MutableLiveData<User>()
-    private val successfulRegistration = MutableLiveData<Int>()
+    private val userStatus = MutableLiveData<Boolean>()
+    private val loginOperationReturnCode = MutableLiveData<Int>()
+    private val registerOperationReturnCode = MutableLiveData<Int>()
 
     fun createUser(newUser: User, email: String, pwd: String): MutableLiveData<Int> {
-        successfulRegistration.value = -1
+        registerOperationReturnCode.value = -1
         repo.createUser(newUser, email, pwd)
-        return successfulRegistration
+        return registerOperationReturnCode
+    }
+
+    fun login(email: String, pwd: String): MutableLiveData<Int> {
+        loginOperationReturnCode.value = -1
+        repo.login(email, pwd)
+        return loginOperationReturnCode
+    }
+
+    fun logout(): MutableLiveData<Boolean> {
+        repo.logout()
+        return userStatus
     }
 
     fun getUserData(): MutableLiveData<User> {
@@ -22,16 +35,33 @@ class UserViewModel : ViewModel(), UserRepository.OnUserOperationComplete {
         return user
     }
 
-    override fun userNotLogin() {
-        this.user.value = null
+    fun getUserStatus(): MutableLiveData<Boolean> {
+        repo.loadUserStatus()
+        return userStatus
     }
 
-    override fun userCreated() {
-        this.successfulRegistration.value = 0
+    override fun userNotLogin() {
+        this.userStatus.value = false
+    }
+
+    override fun userCreationSuccessful() {
+        this.userStatus.value = true
+        this.registerOperationReturnCode.value = 0
     }
 
     override fun userCreationFailed() {
-        this.successfulRegistration.value = 1
+        this.userStatus.value = false
+        this.registerOperationReturnCode.value = 1
+    }
+
+    override fun userLoginSuccessful() {
+        this.userStatus.value = true
+        this.loginOperationReturnCode.value = 0
+    }
+
+    override fun userLoginFailed() {
+        this.userStatus.value = false
+        this.loginOperationReturnCode.value = 1
     }
 
     override fun userDataLoaded(user: User) {
@@ -39,6 +69,10 @@ class UserViewModel : ViewModel(), UserRepository.OnUserOperationComplete {
     }
 
     override fun onError(e: Exception) {
-
     }
+
+    override fun onLogout() {
+        this.userStatus.value = false
+    }
+
 }

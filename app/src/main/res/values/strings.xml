@@ -17,4 +17,8 @@
     <string name="name">Họ tên</string>
     <string name="successful_registration">Đăng ký tài khoản thành công</string>
     <string name="failed_registration">Đăng ký thất bại</string>
+    <string name="login_failed">Đăng nhập thất bại</string>
+    <string name="logout">Đăng xuất</string>
+    <string name="profile">Hồ sơ</string>
+    <string name="successful_login">Đăng nhập thành công</string>
 </resources>

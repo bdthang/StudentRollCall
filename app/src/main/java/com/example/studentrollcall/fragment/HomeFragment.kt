@@ -1,9 +1,8 @@
 package com.example.studentrollcall.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -15,7 +14,7 @@ import com.example.studentrollcall.model.User
 import com.example.studentrollcall.viewmodel.ClassViewModel
 import com.example.studentrollcall.viewmodel.UserViewModel
 
-class HomeFragment: Fragment(R.layout.fragment_home), ClassAdapter.OnItemClickListener {
+class HomeFragment : Fragment(R.layout.fragment_home), ClassAdapter.OnItemClickListener {
     private val TAG = "HomeFragment"
     private lateinit var classAdapter: ClassAdapter
     private val classViewModel: ClassViewModel by viewModels()
@@ -23,6 +22,11 @@ class HomeFragment: Fragment(R.layout.fragment_home), ClassAdapter.OnItemClickLi
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,23 +39,15 @@ class HomeFragment: Fragment(R.layout.fragment_home), ClassAdapter.OnItemClickLi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        userViewModel.getUserData().observe(viewLifecycleOwner) { user ->
-            if (user == null) {
-                val action = HomeFragmentDirections.actionHomeFragmentToLoginFragment()
-                findNavController().navigate(action)
-            } else {
-                setupRecyclerView(user)
-            }
-        }
+        setupRecyclerView()
     }
 
-    private fun setupRecyclerView(user: User) {
+    private fun setupRecyclerView() {
         classAdapter = ClassAdapter(this)
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.adapter = classAdapter
 
-        classViewModel.getClassData(user).observe(viewLifecycleOwner) {
+        classViewModel.getClassData().observe(viewLifecycleOwner) {
             classAdapter.submitList(it)
 //            Log.d(TAG, it.toString())
         }
@@ -60,5 +56,21 @@ class HomeFragment: Fragment(R.layout.fragment_home), ClassAdapter.OnItemClickLi
     override fun onItemClick(_class: Class) {
         val action = HomeFragmentDirections.actionHomeFragmentToClassFragment(_class)
         findNavController().navigate(action)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_home, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.option_logout) {
+            userViewModel.logout()
+            findNavController().navigateUp()
+            return true
+        } else if (item.itemId == R.id.option_profile) {
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

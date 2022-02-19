@@ -35,7 +35,7 @@ class UserRepository(private val onUserOperationComplete: OnUserOperationComplet
                 if (currentUser != null) {
                     userRef.document(currentUser.uid).set(user)
                         .addOnSuccessListener {
-                            onUserOperationComplete.userCreated()
+                            onUserOperationComplete.userCreationSuccessful()
                         }
                 }
 
@@ -45,11 +45,38 @@ class UserRepository(private val onUserOperationComplete: OnUserOperationComplet
             }
     }
 
+    fun login(email: String, pwd: String) {
+        auth.signInWithEmailAndPassword(email, pwd)
+            .addOnSuccessListener {
+                onUserOperationComplete.userLoginSuccessful()
+            }
+            .addOnFailureListener {
+                onUserOperationComplete.userLoginFailed()
+            }
+    }
+
+    fun logout() {
+        auth.signOut()
+        onUserOperationComplete.onLogout()
+    }
+
+    fun loadUserStatus() {
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            onUserOperationComplete.userLoginSuccessful()
+        } else {
+            onUserOperationComplete.userLoginFailed()
+        }
+    }
+
     interface OnUserOperationComplete {
         fun userNotLogin()
-        fun userCreated()
+        fun userCreationSuccessful()
         fun userCreationFailed()
+        fun userLoginSuccessful()
+        fun userLoginFailed()
         fun userDataLoaded(user: User)
         fun onError(e: Exception)
+        fun onLogout()
     }
 }

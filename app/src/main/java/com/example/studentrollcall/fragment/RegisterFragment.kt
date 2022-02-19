@@ -87,6 +87,8 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             userViewModel.createUser(newUser, email, pwd).observe(viewLifecycleOwner) { result ->
                 if (result == 0) {
                     Snackbar.make(requireView(), getString(R.string.successful_registration), Snackbar.LENGTH_SHORT).show()
+                    val action = RegisterFragmentDirections.actionRegisterFragmentToHomeFragment()
+                    findNavController().navigate(action)
                 } else if (result == 1) {
                     Snackbar.make(requireView(), getString(R.string.failed_registration), Snackbar.LENGTH_SHORT).show()
                 }
