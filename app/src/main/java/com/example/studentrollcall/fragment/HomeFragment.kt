@@ -42,10 +42,11 @@ class HomeFragment : Fragment(R.layout.fragment_home), ClassAdapter.OnItemClickL
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupRecyclerView()
 
         userViewModel.getUserData().observe(viewLifecycleOwner) { user ->
             if (user != null) {
+                setupRecyclerView(user.teacher)
+
                 if (user.teacher) {
                     binding.fabAddClass.setOnClickListener {
                         val action = HomeFragmentDirections.actionHomeFragmentToAddEditClassFragment(null)
@@ -93,8 +94,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), ClassAdapter.OnItemClickL
             .show()
     }
 
-    private fun setupRecyclerView() {
-        classAdapter = ClassAdapter(this)
+    private fun setupRecyclerView(isTeacher: Boolean) {
+        classAdapter = ClassAdapter(this, isTeacher)
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.adapter = classAdapter
 
@@ -109,7 +110,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), ClassAdapter.OnItemClickL
         findNavController().navigate(action)
     }
 
-    override fun onItemOptionClick(_class: Class) {
+    override fun onItemEditClick(_class: Class) {
         val action = HomeFragmentDirections.actionHomeFragmentToAddEditClassFragment(_class)
         findNavController().navigate(action)
     }
@@ -128,5 +129,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), ClassAdapter.OnItemClickL
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

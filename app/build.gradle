@@ -61,4 +61,6 @@ dependencies {
 
     implementation "androidx.navigation:navigation-fragment-ktx:2.4.1"
     implementation "androidx.navigation:navigation-ui-ktx:2.4.1"
+
+    implementation 'com.github.yuriy-budiyev:code-scanner:2.1.1'
 }

@@ -19,7 +19,7 @@ class TableLayoutPlus : TableLayout {
     constructor(context: Context?): super(context)
 
     fun outLineTable(width: Int, height: Int) {
-
+        super.removeAllViews()
         addHeaderRow(width)
         repeat(height) { addDataRow(width) }
     }

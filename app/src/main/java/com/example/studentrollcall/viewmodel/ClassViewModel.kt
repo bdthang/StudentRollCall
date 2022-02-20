@@ -13,8 +13,11 @@ class ClassViewModel : ViewModel(), ClassRepository.OnFirestoreTaskComplete {
     private val mapOfClasses = emptyMap<Int, ArrayList<Class>>().toMutableMap()
     private val classOperationReturnCode = MutableLiveData<Int>()
 
-    fun getClassData(): LiveData<ArrayList<Class>> {
+    init {
         repo.loadClassData()
+    }
+
+    fun getClassData(): LiveData<ArrayList<Class>> {
         return classes
     }
 
@@ -27,6 +30,18 @@ class ClassViewModel : ViewModel(), ClassRepository.OnFirestoreTaskComplete {
     fun updateClass(_class: Class, oldShortId: String): MutableLiveData<Int> {
         classOperationReturnCode.value = -1
         repo.updateClass(_class, oldShortId)
+        return classOperationReturnCode
+    }
+
+    fun deleteClass(_class: Class): MutableLiveData<Int> {
+        classOperationReturnCode.value = -1
+        repo.deleteClass(_class)
+        return classOperationReturnCode
+    }
+
+    fun createNewSession(_class: Class): MutableLiveData<Int> {
+        classOperationReturnCode.value = -1
+        repo.createNewSession(_class)
         return classOperationReturnCode
     }
 
@@ -46,6 +61,7 @@ class ClassViewModel : ViewModel(), ClassRepository.OnFirestoreTaskComplete {
             mapOfClasses.forEach {
                 list.addAll(it.value)
             }
+            list.sortByDescending { it.timeStart }
             this.classes.value = list
         }
     }

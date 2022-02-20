@@ -103,12 +103,20 @@ class UserRepository(private val onUserOperationComplete: OnUserOperationComplet
         }
     }
 
+    fun loadUserId() {
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            onUserOperationComplete.userIdLoaded(currentUser.uid)
+        }
+    }
+
     interface OnUserOperationComplete {
         fun userNotLogin()
         fun userCreationSuccessful()
         fun userCreationFailed()
         fun userLoginSuccessful()
         fun userLoginFailed()
+        fun userIdLoaded(userId: String)
         fun userDataLoaded(user: User)
         fun onError(e: Exception)
         fun onLogout()

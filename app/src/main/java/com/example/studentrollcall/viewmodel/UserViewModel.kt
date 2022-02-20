@@ -10,6 +10,7 @@ class UserViewModel : ViewModel(), UserRepository.OnUserOperationComplete {
     private val repo = UserRepository(this)
     private val user = MutableLiveData<User>()
     private val userStatus = MutableLiveData<Boolean>()
+    private val userId = MutableLiveData<String>()
     private val loginOperationReturnCode = MutableLiveData<Int>()
     private val registerOperationReturnCode = MutableLiveData<Int>()
     private val addClassOperationReturnCode = MutableLiveData<Int>()
@@ -33,6 +34,11 @@ class UserViewModel : ViewModel(), UserRepository.OnUserOperationComplete {
     fun getUserData(): MutableLiveData<User> {
         repo.loadUserData()
         return user
+    }
+
+    fun getUserId(): MutableLiveData<String> {
+        repo.loadUserId()
+        return userId
     }
 
     fun getUserStatus(): MutableLiveData<Boolean> {
@@ -68,6 +74,10 @@ class UserViewModel : ViewModel(), UserRepository.OnUserOperationComplete {
     override fun userLoginFailed() {
         this.userStatus.value = false
         this.loginOperationReturnCode.value = 1
+    }
+
+    override fun userIdLoaded(userId: String) {
+        this.userId.value = userId
     }
 
     override fun userDataLoaded(user: User) {

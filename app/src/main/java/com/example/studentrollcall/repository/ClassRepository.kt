@@ -3,6 +3,7 @@ package com.example.studentrollcall.repository
 import com.example.studentrollcall.model.Class
 import com.example.studentrollcall.model.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ClassRepository(private val onFirestoreTaskComplete: OnFirestoreTaskComplete) {
@@ -13,11 +14,6 @@ class ClassRepository(private val onFirestoreTaskComplete: OnFirestoreTaskComple
     private val userRef = db.collection("users")
 
     fun loadClassData() {
-        if (auth.currentUser == null) {
-            onFirestoreTaskComplete.emptyClassListData()
-            return
-        }
-
         userRef.document(auth.currentUser!!.uid)
             .addSnapshotListener { value, error ->
                 if (error != null) {
@@ -109,6 +105,28 @@ class ClassRepository(private val onFirestoreTaskComplete: OnFirestoreTaskComple
                 } else {
                     onFirestoreTaskComplete.classExisted()
                 }
+            }
+    }
+
+    fun deleteClass(_class: Class) {
+        classRef.document(_class.uid).delete()
+            .addOnSuccessListener {
+                onFirestoreTaskComplete.classUpdatedSuccessfully()
+            }
+            .addOnFailureListener {
+                onFirestoreTaskComplete.onError(it)
+            }
+    }
+
+    fun createNewSession(_class: Class) {
+        classRef.document(_class.uid).update(
+            "currentSession", _class.currentSession + 1,
+        "timeStart", FieldValue.serverTimestamp())
+            .addOnSuccessListener {
+                onFirestoreTaskComplete.classUpdatedSuccessfully()
+            }
+            .addOnFailureListener {
+                onFirestoreTaskComplete.onError(it)
             }
     }
 

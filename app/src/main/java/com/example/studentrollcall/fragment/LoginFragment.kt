@@ -1,7 +1,6 @@
 package com.example.studentrollcall.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +9,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.studentrollcall.R
 import com.example.studentrollcall.databinding.FragmentLoginBinding
-import com.example.studentrollcall.helper.*
+import com.example.studentrollcall.helper.validEmail
+import com.example.studentrollcall.helper.validPassword
 import com.example.studentrollcall.viewmodel.UserViewModel
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
     private val TAG = "LoginFragment"
@@ -92,5 +91,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         } else {
             Snackbar.make(requireView(), getString(R.string.wrong_information), Snackbar.LENGTH_SHORT).show()
         }
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

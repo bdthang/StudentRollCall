@@ -3,7 +3,10 @@ package com.example.studentrollcall.model
 import android.os.Parcelable
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.Exclude
+import com.google.firebase.firestore.FieldValue
 import kotlinx.parcelize.Parcelize
+import java.time.LocalDateTime
+import java.util.*
 
 @Parcelize
 data class Class(
@@ -16,4 +19,5 @@ data class Class(
     val timeLimit: Int = 30,
     val currentSession: Int = 1,
     var authorId: String = "",
-) : Parcelable
+    val timeStart: Date = Date(0),
+    ) : Parcelable

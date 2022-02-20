@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import com.example.studentrollcall.helper.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -72,6 +73,11 @@ class AddEditClassFragment : Fragment(R.layout.fragment_add_edit_class) {
                 etShortId.setText(classToEdit.shortId)
                 etTimeLimit.setText(classToEdit.timeLimit.toString())
 
+                buttonDeleteClass.visibility = View.VISIBLE
+                buttonDeleteClass.setOnClickListener {
+                    deleteClassDialog(classToEdit)
+                }
+
                 buttonConfirmClass.setOnClickListener {
                     if (validateField()) {
                         val title = etTitle.text.toString().trim()
@@ -113,6 +119,20 @@ class AddEditClassFragment : Fragment(R.layout.fragment_add_edit_class) {
         }
     }
 
+    private fun deleteClassDialog(_class: Class) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.delete_class_confirmation))
+            .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                classViewModel.deleteClass(_class).observe(viewLifecycleOwner) {
+                    if (it == 0) {
+                        findNavController().navigateUp()
+                    }
+                }
+            }
+            .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
+            .show()
+    }
+
     private fun validateField(): Boolean {
         binding.apply {
             val title = etTitle.text.toString().trim()
@@ -133,5 +153,10 @@ class AddEditClassFragment : Fragment(R.layout.fragment_add_edit_class) {
         }
 
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

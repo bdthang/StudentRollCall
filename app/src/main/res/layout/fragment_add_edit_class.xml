@@ -126,15 +126,34 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/button_confirm_class"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/confirm"
-        app:icon="@drawable/ic_baseline_check_24"
-        tools:ignore="ButtonStyle" />
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/button_confirm_class"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm"
+            app:icon="@drawable/ic_baseline_check_24"
+            tools:ignore="ButtonStyle" />
+
+        <Button
+            android:id="@+id/button_delete_class"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="8dp"
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:text="@string/delete_class"
+            app:icon="@drawable/ic_baseline_delete_24"
+            tools:ignore="ButtonStyle" />
+    </LinearLayout>
+
+
 
 
 </RelativeLayout>
