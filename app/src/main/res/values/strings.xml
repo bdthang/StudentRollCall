@@ -50,6 +50,16 @@
     <string name="roll_call_successful">Điểm danh thành công</string>
     <string name="wrong_student_id">Sai mã số sinh viên</string>
     <string name="missing_info">Vui lòng nhập đủ thông tin</string>
+    <string name="email_recover_sent">Đã gửi email khôi phục</string>
+    <string name="profile_update_failed">Cập nhật thông tin thất bại</string>
+    <string name="profile_update_success">Cập nhật thông tin thành công</string>
+    <string name="absence_detail">Chi tiết vắng:</string>
+    <string name="student_count">Số học sinh</string>
+    <string name="one">1</string>
+    <string name="_2">2</string>
+    <string name="three_plus">3+</string>
+    <string name="statistics">Thông số lớp</string>
+    <string name="session_count">Số buổi học</string>
 
     <string-array name="role">
         <item>Sinh viên</item>

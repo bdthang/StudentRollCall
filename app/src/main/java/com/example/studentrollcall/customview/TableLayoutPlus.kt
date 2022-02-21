@@ -12,32 +12,32 @@ import com.example.studentrollcall.model.Entry
 import com.example.studentrollcall.model.User
 
 class TableLayoutPlus : TableLayout {
-
+    lateinit var onItemClickListener: OnItemClickListener
     private val TAG = "TableLayoutPlus"
 
-    constructor(context: Context?, attrs: AttributeSet?): super(context, attrs)
+    constructor(context: Context?, attrs: AttributeSet) : super(context, attrs)
 
-    constructor(context: Context?): super(context)
+    constructor(context: Context?) : super(context)
 
     fun drawTable(data: HashMap<User, MutableList<Entry>>) {
         val outValue = TypedValue()
         context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
 
-        data.forEach { (key, value) ->
+        data.forEach { (user, entries) ->
             val row = TableRow(context)
             row.isClickable = true
             row.setBackgroundResource(outValue.resourceId)
             row.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
 
-            row.addView(newCell(key.name))
+            row.addView(newUserCell(user))
 
             var currentColumn = 1
-            value.sortedBy { it.session }.forEach {
-                while (it.session != currentColumn) {
+            entries.sortedBy { it.session }.forEach { entry ->
+                while (entry.session != currentColumn) {
                     row.addView(newCell(" "))
                     currentColumn++
                 }
-                row.addView(newCell("X"))
+                row.addView(newCell("X", entry))
 
                 currentColumn++
             }
@@ -46,7 +46,7 @@ class TableLayoutPlus : TableLayout {
         }
     }
 
-    private fun newCell(s: String): TextView {
+    private fun newCell(s: String, entry: Entry? = null): TextView {
         val newCell = TextView(context)
         newCell.setPadding(16)
         newCell.text = s
@@ -54,6 +54,25 @@ class TableLayoutPlus : TableLayout {
             TableRow.LayoutParams.WRAP_CONTENT,
             TableRow.LayoutParams.WRAP_CONTENT
         )
+        if (entry != null) {
+            newCell.setOnClickListener {
+                onItemClickListener.onItemClick(entry)
+            }
+        }
+        return newCell
+    }
+
+    private fun newUserCell(user: User): TextView {
+        val newCell = TextView(context)
+        newCell.setPadding(16)
+        newCell.text = user.name
+        newCell.layoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.WRAP_CONTENT,
+            TableRow.LayoutParams.WRAP_CONTENT
+        )
+        newCell.setOnClickListener {
+            onItemClickListener.onUserClick(user)
+        }
         return newCell
     }
 
@@ -70,6 +89,11 @@ class TableLayoutPlus : TableLayout {
         }
 
         super.addView(row)
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(entry: Entry)
+        fun onUserClick(user: User)
     }
 
 }

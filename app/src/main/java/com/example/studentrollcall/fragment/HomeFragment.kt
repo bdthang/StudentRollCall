@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.onNavDestinationSelected
 import com.example.studentrollcall.R
 import com.example.studentrollcall.adapter.ClassAdapter
 import com.example.studentrollcall.databinding.FragmentHomeBinding
@@ -125,10 +126,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), ClassAdapter.OnItemClickL
             userViewModel.logout()
             findNavController().navigateUp()
             return true
-        } else if (item.itemId == R.id.option_profile) {
-            return true
         }
-        return super.onOptionsItemSelected(item)
+        return item.onNavDestinationSelected(findNavController()) || super.onOptionsItemSelected(item)
     }
     override fun onDestroyView() {
         super.onDestroyView()

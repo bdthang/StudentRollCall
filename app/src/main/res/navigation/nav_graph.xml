@@ -40,6 +40,27 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_classFragment_to_photoFragment"
+            app:destination="@id/photoFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_classFragment_to_profileReadFragment"
+            app:destination="@id/profileReadFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_classFragment_to_statisticFragment"
+            app:destination="@id/statisticFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -84,7 +105,7 @@
     <fragment
         android:id="@+id/recoverPasswordFragment"
         android:name="com.example.studentrollcall.fragment.RecoverPasswordFragment"
-        android:label="fragment_recover_password"
+        android:label="Quên mật khẩu"
         tools:layout="@layout/fragment_recover_password" />
     <fragment
         android:id="@+id/addEditClassFragment"
@@ -117,4 +138,36 @@
         android:name="com.example.studentrollcall.fragment.ScannerFragment"
         android:label="Quét thẻ sinh viên"
         tools:layout="@layout/fragment_scanner" />
+    <fragment
+        android:id="@+id/photoFragment"
+        android:name="com.example.studentrollcall.fragment.PhotoFragment"
+        android:label="@string/photo"
+        tools:layout="@layout/fragment_photo">
+        <argument
+            android:name="entryToShow"
+            app:argType="com.example.studentrollcall.model.Entry" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.studentrollcall.fragment.ProfileFragment"
+        android:label="Hồ sơ"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/profileReadFragment"
+        android:name="com.example.studentrollcall.fragment.ProfileReadFragment"
+        android:label="Thông tin sinh viên"
+        tools:layout="@layout/fragment_profile_read" >
+        <argument
+            android:name="userToShow"
+            app:argType="com.example.studentrollcall.model.User" />
+    </fragment>
+    <fragment
+        android:id="@+id/statisticFragment"
+        android:name="com.example.studentrollcall.fragment.StatisticFragment"
+        android:label="Thống kê lớp"
+        tools:layout="@layout/fragment_statistic" >
+        <argument
+            android:name="classToView"
+            app:argType="com.example.studentrollcall.model.Class" />
+    </fragment>
 </navigation>

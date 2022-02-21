@@ -14,7 +14,7 @@ class UserViewModel : ViewModel(), UserRepository.OnUserOperationComplete {
     private val users = MutableLiveData<ArrayList<User>>()
     private val loginOperationReturnCode = MutableLiveData<Int>()
     private val registerOperationReturnCode = MutableLiveData<Int>()
-    private val addClassOperationReturnCode = MutableLiveData<Int>()
+    private val operationReturnCode = MutableLiveData<Int>()
 
     fun createUser(newUser: User, email: String, pwd: String): MutableLiveData<Int> {
         registerOperationReturnCode.value = -1
@@ -52,10 +52,22 @@ class UserViewModel : ViewModel(), UserRepository.OnUserOperationComplete {
         return userStatus
     }
 
+    fun updateUser(user: User): MutableLiveData<Int> {
+        operationReturnCode.value = -1
+        repo.updateUser(user)
+        return operationReturnCode
+    }
+
     fun studentAddClass(classShortId: String): MutableLiveData<Int> {
-        addClassOperationReturnCode.value = -1
+        operationReturnCode.value = -1
         repo.studentAddClass(classShortId)
-        return addClassOperationReturnCode
+        return operationReturnCode
+    }
+
+    fun recoverPassword(email: String): MutableLiveData<Int> {
+        operationReturnCode.value = -1
+        repo.recoverPassword(email)
+        return operationReturnCode
     }
 
     override fun userNotLogin() {
@@ -97,12 +109,12 @@ class UserViewModel : ViewModel(), UserRepository.OnUserOperationComplete {
         this.userStatus.value = false
     }
 
-    override fun classAddedSuccessful() {
-        this.addClassOperationReturnCode.value = 0
+    override fun onOperationSuccessful() {
+        this.operationReturnCode.value = 0
     }
 
-    override fun classAddedFail() {
-        this.addClassOperationReturnCode.value = 1
+    override fun onOperationFailed() {
+        this.operationReturnCode.value = 1
     }
 
     override fun onUsersLoaded(users: ArrayList<User>) {

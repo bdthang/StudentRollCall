@@ -10,14 +10,19 @@
         <entry key="..\:/Desktop/StudentRollCall/app/src/main/res/layout/fragment_class.xml" value="0.20599409033347404" />
         <entry key="..\:/Desktop/StudentRollCall/app/src/main/res/layout/fragment_home.xml" value="0.38915470494417864" />
         <entry key="..\:/Desktop/StudentRollCall/app/src/main/res/layout/fragment_login.xml" value="0.2" />
+        <entry key="..\:/Desktop/StudentRollCall/app/src/main/res/layout/fragment_photo.xml" value="0.20863616930312098" />
+        <entry key="..\:/Desktop/StudentRollCall/app/src/main/res/layout/fragment_profile.xml" value="0.20599409033347404" />
+        <entry key="..\:/Desktop/StudentRollCall/app/src/main/res/layout/fragment_profile_read.xml" value="0.20863616930312098" />
         <entry key="..\:/Desktop/StudentRollCall/app/src/main/res/layout/fragment_recover_password.xml" value="0.25416666666666665" />
         <entry key="..\:/Desktop/StudentRollCall/app/src/main/res/layout/fragment_register.xml" value="0.25416666666666665" />
         <entry key="..\:/Desktop/StudentRollCall/app/src/main/res/layout/fragment_roll_call.xml" value="0.20863616930312098" />
         <entry key="..\:/Desktop/StudentRollCall/app/src/main/res/layout/fragment_scanner.xml" value="0.20599409033347404" />
+        <entry key="..\:/Desktop/StudentRollCall/app/src/main/res/layout/fragment_statistic.xml" value="0.20863616930312098" />
         <entry key="..\:/Desktop/StudentRollCall/app/src/main/res/layout/fragment_tally.xml" value="0.20863616930312098" />
         <entry key="..\:/Desktop/StudentRollCall/app/src/main/res/layout/item_class.xml" value="0.20599409033347404" />
         <entry key="..\:/Desktop/StudentRollCall/app/src/main/res/layout/item_dropdown.xml" value="0.20863616930312098" />
         <entry key="..\:/Desktop/StudentRollCall/app/src/main/res/layout/layout_bottom_sheet.xml" value="0.20863616930312098" />
+        <entry key="..\:/Desktop/StudentRollCall/app/src/main/res/menu/menu_class.xml" value="0.1" />
         <entry key="..\:/Desktop/StudentRollCall/app/src/main/res/menu/menu_home.xml" value="0.20863616930312098" />
       </map>
     </option>

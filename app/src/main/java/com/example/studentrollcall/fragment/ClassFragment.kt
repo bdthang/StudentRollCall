@@ -3,15 +3,14 @@ package com.example.studentrollcall.fragment
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.studentrollcall.R
+import com.example.studentrollcall.customview.TableLayoutPlus
 import com.example.studentrollcall.databinding.FragmentClassBinding
 import com.example.studentrollcall.helper.reverseOrderOfWords
 import com.example.studentrollcall.model.Class
@@ -26,15 +25,21 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.util.*
 
-class ClassFragment : Fragment(R.layout.fragment_class) {
+class ClassFragment : Fragment(R.layout.fragment_class), TableLayoutPlus.OnItemClickListener {
     private val TAG = "ClassFragment"
     private var _binding: FragmentClassBinding? = null
     private val binding get() = _binding!!
+    private lateinit var _class: Class
 
     private val args: ClassFragmentArgs by navArgs()
     private val entryViewModel: EntryViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
     private val classViewModel: ClassViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,7 +52,9 @@ class ClassFragment : Fragment(R.layout.fragment_class) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val _class: Class = args.classToEdit
+        _class = args.classToEdit
+
+        binding.tableLayout.onItemClickListener = this
 
         userViewModel.getUserData().observe(viewLifecycleOwner) { user ->
             if (user.teacher) {
@@ -128,6 +135,30 @@ class ClassFragment : Fragment(R.layout.fragment_class) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onItemClick(entry: Entry) {
+        val action = ClassFragmentDirections.actionClassFragmentToPhotoFragment(entry)
+        findNavController().navigate(action)
+    }
+
+    override fun onUserClick(user: User) {
+        val action = ClassFragmentDirections.actionClassFragmentToProfileReadFragment(user)
+        findNavController().navigate(action)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_class, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.option_statistic) {
+            val action = ClassFragmentDirections.actionClassFragmentToStatisticFragment(_class)
+            findNavController().navigate(action)
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 }

@@ -3,17 +3,20 @@ package com.example.studentrollcall.fragment
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.studentrollcall.R
 import com.example.studentrollcall.databinding.FragmentRegisterBinding
-import com.example.studentrollcall.helper.*
+import com.example.studentrollcall.helper.validEmail
+import com.example.studentrollcall.helper.validNotBlank
+import com.example.studentrollcall.helper.validPassword
+import com.example.studentrollcall.helper.validPasswordConfirmation
 import com.example.studentrollcall.model.User
 import com.example.studentrollcall.viewmodel.UserViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -22,6 +25,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
     private val userViewModel: UserViewModel by viewModels()
+    private val TAG = "RegisterFragment"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,19 +69,25 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 }
             }
 
+            etStudentId.setOnFocusChangeListener { _, focused ->
+                if (!focused) {
+                    val studentId = etStudentId.text.toString().trim()
+                    containerMssv.helperText = validNotBlank(studentId)
+                }
+            }
+
             val roles = resources.getStringArray(R.array.role)
             val arrayAdapter = ArrayAdapter(requireContext(), R.layout.item_dropdown, roles)
             atvRole.setAdapter(arrayAdapter)
             atvRole.addTextChangedListener(object: TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                override fun afterTextChanged(p0: Editable?) {}
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (p0 == getString(R.string.teacher)) {
-                        etStudentId.visibility = View.GONE
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+                override fun afterTextChanged(p0: Editable?) {
+                    if (p0.toString() == getString(R.string.teacher)) {
+                        containerMssv.visibility = View.GONE
                     } else {
-                        etStudentId.visibility = View.VISIBLE
+                        containerMssv.visibility = View.VISIBLE
                     }
-
                 }
             })
 
@@ -97,15 +107,17 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         val name = binding.etName.text.toString().trim()
         binding.nameContainer.helperText = validNotBlank(name)
         val role = binding.atvRole.text.toString().trim() == resources.getString(R.string.teacher)
-        val studentId = binding.etStudentId.text.toString().trim().toInt()
+        val studentId = binding.etStudentId.text.toString().trim()
+        binding.containerMssv.helperText = validNotBlank(studentId)
 
         val validEmail = binding.emailContainer.helperText == null
         val validPassword = binding.passwordContainer.helperText == null
         val validConfirmationPassword = binding.passwordConfirmationContainer.helperText == null
         val validName = binding.nameContainer.helperText == null
+        val validStudentId = binding.containerMssv.helperText == null
 
-        if (validEmail && validPassword && validConfirmationPassword && validName) {
-            val newUser = User("", name, role, studentId)
+        if (validEmail && validPassword && validConfirmationPassword && validName && validStudentId) {
+            val newUser = User("", name, role, studentId.toInt(), ArrayList(), email)
             userViewModel.createUser(newUser, email, pwd).observe(viewLifecycleOwner) { result ->
                 if (result == 0) {
                     Snackbar.make(requireView(), getString(R.string.successful_registration), Snackbar.LENGTH_SHORT).show()

@@ -63,4 +63,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:2.4.1"
 
     implementation 'com.github.yuriy-budiyev:code-scanner:2.1.1'
+
+    // Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

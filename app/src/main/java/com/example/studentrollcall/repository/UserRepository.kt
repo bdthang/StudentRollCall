@@ -84,7 +84,7 @@ class UserRepository(private val onUserOperationComplete: OnUserOperationComplet
                         .addOnSuccessListener { classesQuery ->
                             if (classesQuery.isEmpty) {
                                 // No such class
-                                onUserOperationComplete.classAddedFail()
+                                onUserOperationComplete.onOperationFailed()
                             } else {
                                 val classes = classesQuery.toObjects(Class::class.java)
                                 val _class = classes[0]
@@ -93,7 +93,7 @@ class UserRepository(private val onUserOperationComplete: OnUserOperationComplet
                                     user.classes.add(_class.uid)
                                     userRef.document(currentUser.uid).set(user)
                                 }
-                                onUserOperationComplete.classAddedSuccessful()
+                                onUserOperationComplete.onOperationSuccessful()
                             }
 
                         }
@@ -119,6 +119,29 @@ class UserRepository(private val onUserOperationComplete: OnUserOperationComplet
             }
     }
 
+    fun recoverPassword(email: String) {
+        auth.sendPasswordResetEmail(email)
+            .addOnSuccessListener {
+                onUserOperationComplete.onOperationSuccessful()
+            }
+            .addOnFailureListener {
+                onUserOperationComplete.onOperationFailed()
+            }
+    }
+
+    fun updateUser(user: User) {
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            userRef.document(currentUser.uid).set(user)
+                .addOnSuccessListener {
+                    onUserOperationComplete.onOperationSuccessful()
+                }
+                .addOnFailureListener {
+                    onUserOperationComplete.onOperationFailed()
+                }
+        }
+    }
+
     interface OnUserOperationComplete {
         fun userNotLogin()
         fun userCreationSuccessful()
@@ -129,8 +152,8 @@ class UserRepository(private val onUserOperationComplete: OnUserOperationComplet
         fun userDataLoaded(user: User)
         fun onError(e: Exception)
         fun onLogout()
-        fun classAddedSuccessful()
-        fun classAddedFail()
         fun onUsersLoaded(users: ArrayList<User>)
+        fun onOperationSuccessful()
+        fun onOperationFailed()
     }
 }
