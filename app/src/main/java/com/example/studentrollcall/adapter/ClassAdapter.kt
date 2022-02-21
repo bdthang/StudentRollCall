@@ -1,16 +1,17 @@
 package com.example.studentrollcall.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.studentrollcall.R
 import com.example.studentrollcall.databinding.ItemClassBinding
 import com.example.studentrollcall.model.Class
-import com.example.studentrollcall.viewmodel.UserViewModel
+import java.util.*
 
 class ClassAdapter(private val listener: OnItemClickListener, private val isTeacher: Boolean) : ListAdapter<Class, ClassAdapter.ViewHolder>(DiffCallback()) {
 
@@ -39,6 +40,13 @@ class ClassAdapter(private val listener: OnItemClickListener, private val isTeac
             binding.apply {
                 tvTitle.text = _class.title
                 tvDescription.text = _class.description
+
+                val time = Calendar.getInstance().timeInMillis
+                val endTime = _class.timeStart.time + _class.timeLimit * 60 * 1000
+                if (time < endTime) {
+                    containerItem.setBackgroundColor(ContextCompat.getColor(binding.root.context, R.color.warning))
+                }
+
                 if (isTeacher) {
                     buttonEditClass.setOnClickListener {
                         val position = adapterPosition

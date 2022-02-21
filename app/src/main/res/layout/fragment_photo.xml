@@ -6,8 +6,16 @@
     android:layout_height="match_parent">
 
     <ImageView
+        android:id="@+id/img_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/img_photo"
-        android:contentDescription="@string/photo" />
+        android:contentDescription="@string/photo"
+        tools:ignore="ImageContrastCheck" />
+
+    <ProgressBar
+        android:layout_gravity="center"
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </FrameLayout>

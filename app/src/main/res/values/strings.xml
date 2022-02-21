@@ -60,6 +60,7 @@
     <string name="three_plus">3+</string>
     <string name="statistics">Thông số lớp</string>
     <string name="session_count">Số buổi học</string>
+    <string name="image_loading_failed">Tải ảnh thất bại</string>
 
     <string-array name="role">
         <item>Sinh viên</item>

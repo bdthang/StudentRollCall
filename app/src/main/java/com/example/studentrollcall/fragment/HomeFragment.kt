@@ -126,8 +126,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), ClassAdapter.OnItemClickL
             userViewModel.logout()
             findNavController().navigateUp()
             return true
+        } else if (item.itemId == R.id.option_profile) {
+            val action = HomeFragmentDirections.actionHomeFragmentToProfileFragment()
+            findNavController().navigate(action)
+            return true
         }
-        return item.onNavDestinationSelected(findNavController()) || super.onOptionsItemSelected(item)
+        return super.onOptionsItemSelected(item)
     }
     override fun onDestroyView() {
         super.onDestroyView()
