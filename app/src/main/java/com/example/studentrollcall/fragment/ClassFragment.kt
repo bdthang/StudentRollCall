@@ -13,7 +13,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.studentrollcall.R
 import com.example.studentrollcall.databinding.FragmentClassBinding
+import com.example.studentrollcall.helper.reverseOrderOfWords
 import com.example.studentrollcall.model.Class
+import com.example.studentrollcall.model.Entry
+import com.example.studentrollcall.model.User
 import com.example.studentrollcall.viewmodel.ClassViewModel
 import com.example.studentrollcall.viewmodel.EntryViewModel
 import com.example.studentrollcall.viewmodel.UserViewModel
@@ -23,7 +26,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.util.*
 
-class ClassFragment: Fragment(R.layout.fragment_class) {
+class ClassFragment : Fragment(R.layout.fragment_class) {
     private val TAG = "ClassFragment"
     private var _binding: FragmentClassBinding? = null
     private val binding get() = _binding!!
@@ -58,7 +61,8 @@ class ClassFragment: Fragment(R.layout.fragment_class) {
                     binding.fabAction.setImageResource(R.drawable.ic_baseline_check_24)
 
                     binding.fabAction.setOnClickListener {
-                        val action = ClassFragmentDirections.actionClassFragmentToTallyFragment(_class)
+                        val action =
+                            ClassFragmentDirections.actionClassFragmentToTallyFragment(_class)
                         findNavController().navigate(action)
                     }
                 } else {
@@ -68,21 +72,37 @@ class ClassFragment: Fragment(R.layout.fragment_class) {
             }
         }
 
-        entryViewModel.getEntries(_class).observe(viewLifecycleOwner) { entries ->
-//            Log.d(TAG, entries.toString())
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                if (isActive) {
-                    // Draw table
-                    val width = _class.currentSession
-                    val entryGroup = entries.groupBy { it.userId }
-                    val height = entryGroup.count()
+        userViewModel.getUsers(_class).observe(viewLifecycleOwner) { students ->
+            if (students != null) {
 
-                    binding.tableLayout.outLineTable(width, height)
-                    binding.tableLayout.fillData(entryGroup)
+                entryViewModel.getEntries(_class).observe(viewLifecycleOwner) { entries ->
 
-                } else {
-                    Log.w(TAG, "Lifecycle ended early")
+                    val entryMap = HashMap<String, MutableList<Entry>>()
+                    entries.groupByTo(entryMap) { it.userId }
+                    students.sortBy { reverseOrderOfWords(it.name) }
+
+                    val result = HashMap<User, MutableList<Entry>>()
+                    students.forEach { student ->
+                        val privateEntryList = entryMap[student.uid]
+                        if (privateEntryList != null) {
+                            result[student] = privateEntryList
+                        } else {
+                            result[student] = mutableListOf()
+                        }
+                    }
+//                    Log.d(TAG, result.toString())
+
+                    viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                        if (isActive) {
+                            binding.tableLayout.drawHeader(_class.currentSession)
+                            binding.tableLayout.drawTable(result)
+                        } else {
+                            Log.w(TAG, "Lifecycle ended early")
+                        }
+                    }
+
                 }
+
             }
         }
     }
@@ -93,7 +113,11 @@ class ClassFragment: Fragment(R.layout.fragment_class) {
             .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 classViewModel.createNewSession(_class).observe(viewLifecycleOwner) {
                     if (it == 0) {
-                        Snackbar.make(requireView(), getString(R.string.session_created), Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(
+                            requireView(),
+                            getString(R.string.session_created),
+                            Snackbar.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }

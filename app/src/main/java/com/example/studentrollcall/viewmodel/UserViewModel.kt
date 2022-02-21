@@ -2,15 +2,16 @@ package com.example.studentrollcall.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.studentrollcall.model.Class
 import com.example.studentrollcall.model.User
 import com.example.studentrollcall.repository.UserRepository
-import java.lang.Exception
 
 class UserViewModel : ViewModel(), UserRepository.OnUserOperationComplete {
     private val repo = UserRepository(this)
     private val user = MutableLiveData<User>()
     private val userStatus = MutableLiveData<Boolean>()
     private val userId = MutableLiveData<String>()
+    private val users = MutableLiveData<ArrayList<User>>()
     private val loginOperationReturnCode = MutableLiveData<Int>()
     private val registerOperationReturnCode = MutableLiveData<Int>()
     private val addClassOperationReturnCode = MutableLiveData<Int>()
@@ -34,6 +35,11 @@ class UserViewModel : ViewModel(), UserRepository.OnUserOperationComplete {
     fun getUserData(): MutableLiveData<User> {
         repo.loadUserData()
         return user
+    }
+
+    fun getUsers(_class: Class): MutableLiveData<ArrayList<User>> {
+        repo.loadUsers(_class)
+        return users
     }
 
     fun getUserId(): MutableLiveData<String> {
@@ -97,6 +103,10 @@ class UserViewModel : ViewModel(), UserRepository.OnUserOperationComplete {
 
     override fun classAddedFail() {
         this.addClassOperationReturnCode.value = 1
+    }
+
+    override fun onUsersLoaded(users: ArrayList<User>) {
+        this.users.value = users
     }
 
 }

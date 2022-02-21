@@ -110,6 +110,15 @@ class UserRepository(private val onUserOperationComplete: OnUserOperationComplet
         }
     }
 
+    fun loadUsers(_class: Class) {
+        userRef.whereArrayContains("classes", _class.uid)
+            .get()
+            .addOnSuccessListener {
+                val users: ArrayList<User> = it.toObjects(User::class.java) as ArrayList<User>
+                onUserOperationComplete.onUsersLoaded(users)
+            }
+    }
+
     interface OnUserOperationComplete {
         fun userNotLogin()
         fun userCreationSuccessful()
@@ -122,5 +131,6 @@ class UserRepository(private val onUserOperationComplete: OnUserOperationComplet
         fun onLogout()
         fun classAddedSuccessful()
         fun classAddedFail()
+        fun onUsersLoaded(users: ArrayList<User>)
     }
 }

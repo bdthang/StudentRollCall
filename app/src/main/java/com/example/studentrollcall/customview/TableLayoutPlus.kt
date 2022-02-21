@@ -2,13 +2,14 @@ package com.example.studentrollcall.customview
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
+import android.util.TypedValue
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.core.view.setPadding
 import com.example.studentrollcall.R
 import com.example.studentrollcall.model.Entry
+import com.example.studentrollcall.model.User
 
 class TableLayoutPlus : TableLayout {
 
@@ -18,82 +19,57 @@ class TableLayoutPlus : TableLayout {
 
     constructor(context: Context?): super(context)
 
-    fun outLineTable(width: Int, height: Int) {
-        super.removeAllViews()
-        addHeaderRow(width)
-        repeat(height) { addDataRow(width) }
-    }
+    fun drawTable(data: HashMap<User, MutableList<Entry>>) {
+        val outValue = TypedValue()
+        context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
 
-    private fun addHeaderRow(width: Int) {
-        val row = TableRow(context)
-        row.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+        data.forEach { (key, value) ->
+            val row = TableRow(context)
+            row.isClickable = true
+            row.setBackgroundResource(outValue.resourceId)
+            row.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
 
-        val tvNothing = TextView(context)
-        tvNothing.layoutParams = TableRow.LayoutParams(
-            TableRow.LayoutParams.WRAP_CONTENT,
-            TableRow.LayoutParams.WRAP_CONTENT
-        )
-        tvNothing.setPadding(8)
-        tvNothing.text = context.getString(R.string.table_header)
-        row.addView(tvNothing)
+            row.addView(newCell(key.name))
 
-        repeat(width) { index ->
-            val tvNum = TextView(context)
-            tvNum.layoutParams = TableRow.LayoutParams(
-                TableRow.LayoutParams.WRAP_CONTENT,
-                TableRow.LayoutParams.WRAP_CONTENT
-            )
-            val num = index + 1
-            tvNum.text = num.toString()
-            tvNum.setPadding(8)
-            row.addView(tvNum)
-        }
+            var currentColumn = 1
+            value.sortedBy { it.session }.forEach {
+                while (it.session != currentColumn) {
+                    row.addView(newCell(" "))
+                    currentColumn++
+                }
+                row.addView(newCell("X"))
 
-        super.addView(row)
-
-    }
-
-    private fun addDataRow(width: Int) {
-        val row = TableRow(context)
-        row.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-
-        val tvName = TextView(context)
-        tvName.layoutParams = TableRow.LayoutParams(
-            TableRow.LayoutParams.WRAP_CONTENT,
-            TableRow.LayoutParams.WRAP_CONTENT
-        )
-        tvName.setPadding(8)
-        row.addView(tvName)
-
-        repeat(width) {
-            val tvCheckIcon = TextView(context)
-            tvCheckIcon.layoutParams = TableRow.LayoutParams(
-                TableRow.LayoutParams.WRAP_CONTENT,
-                TableRow.LayoutParams.WRAP_CONTENT
-            )
-            tvCheckIcon.setPadding(8)
-            row.addView(tvCheckIcon)
-        }
-
-        super.addView(row)
-    }
-
-    fun fillData(entryGroup: Map<String, List<Entry>>) {
-        var i = 1
-        entryGroup.forEach { aStudentEntries ->
-            val row: TableRow = this.getChildAt(i) as TableRow
-
-            val tvName: TextView = row.getChildAt(0) as TextView
-            tvName.text = aStudentEntries.key
-
-            aStudentEntries.value.forEach {
-                val tvCheck: TextView = row.getChildAt(it.session) as TextView
-                tvCheck.text = "✓"
+                currentColumn++
             }
 
-            i++
+            super.addView(row)
+        }
+    }
+
+    private fun newCell(s: String): TextView {
+        val newCell = TextView(context)
+        newCell.setPadding(16)
+        newCell.text = s
+        newCell.layoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.WRAP_CONTENT,
+            TableRow.LayoutParams.WRAP_CONTENT
+        )
+        return newCell
+    }
+
+    fun drawHeader(width: Int) {
+        super.removeAllViews()
+        val row = TableRow(context)
+        row.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+
+        row.addView(newCell(context.getString(R.string.table_header)))
+
+        repeat(width) { index ->
+            val num = index + 1
+            row.addView(newCell(num.toString()))
         }
 
+        super.addView(row)
     }
 
 }
