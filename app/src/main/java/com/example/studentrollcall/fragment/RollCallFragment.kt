@@ -90,6 +90,7 @@ class RollCallFragment: Fragment(R.layout.fragment_roll_call) {
                     entryViewModel.addEntry(entry, photo!!).observe(viewLifecycleOwner) {
                         if (it == 0) {
                             Snackbar.make(requireView(), getString(R.string.roll_call_successful), Snackbar.LENGTH_SHORT).show()
+                            findNavController().navigateUp()
                         } else if (it == 1) {
                             Snackbar.make(requireView(), getString(R.string.roll_call_failed), Snackbar.LENGTH_SHORT).show()
                         }

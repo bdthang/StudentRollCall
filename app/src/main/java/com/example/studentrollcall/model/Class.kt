@@ -17,7 +17,7 @@ data class Class(
     val shortId: String = "",
     val description: String = "Description",
     val timeLimit: Int = 30,
-    val currentSession: Int = 1,
+    val currentSession: Int = 0,
     var authorId: String = "",
     val timeStart: Date = Date(0),
     ) : Parcelable

@@ -86,7 +86,7 @@ class ClassFragment : Fragment(R.layout.fragment_class), TableLayoutPlus.OnItemC
 
                     val entryMap = HashMap<String, MutableList<Entry>>()
                     entries.groupByTo(entryMap) { it.userId }
-                    students.sortBy { reverseOrderOfWords(it.name) }
+                    students.sortedBy { reverseOrderOfWords(it.name) }
 
                     val result = HashMap<User, MutableList<Entry>>()
                     students.forEach { student ->

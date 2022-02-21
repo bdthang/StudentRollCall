@@ -3,6 +3,7 @@ package com.example.studentrollcall.customview
 import android.content.Context
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.widget.ImageView
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
@@ -32,12 +33,12 @@ class TableLayoutPlus : TableLayout {
             row.addView(newUserCell(user))
 
             var currentColumn = 1
-            entries.sortedBy { it.session }.forEach { entry ->
+            entries.distinct().sortedBy { it.session }.forEach { entry ->
                 while (entry.session != currentColumn) {
                     row.addView(newCell(" "))
                     currentColumn++
                 }
-                row.addView(newCell("X", entry))
+                row.addView(newDataCell(entry))
 
                 currentColumn++
             }
@@ -46,7 +47,7 @@ class TableLayoutPlus : TableLayout {
         }
     }
 
-    private fun newCell(s: String, entry: Entry? = null): TextView {
+    private fun newCell(s: String): TextView {
         val newCell = TextView(context)
         newCell.setPadding(16)
         newCell.text = s
@@ -54,12 +55,20 @@ class TableLayoutPlus : TableLayout {
             TableRow.LayoutParams.WRAP_CONTENT,
             TableRow.LayoutParams.WRAP_CONTENT
         )
-        if (entry != null) {
-            newCell.setOnClickListener {
-                onItemClickListener.onItemClick(entry)
-            }
-        }
         return newCell
+    }
+
+    private fun newDataCell(entry: Entry): ImageView {
+        val newDataCell = ImageView(context)
+        newDataCell.layoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.MATCH_PARENT,
+            TableRow.LayoutParams.MATCH_PARENT
+        )
+        newDataCell.setImageResource(R.drawable.ic_baseline_check_24)
+        newDataCell.setOnClickListener {
+            onItemClickListener.onItemClick(entry)
+        }
+        return newDataCell
     }
 
     private fun newUserCell(user: User): TextView {

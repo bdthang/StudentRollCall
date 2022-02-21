@@ -107,8 +107,9 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         val name = binding.etName.text.toString().trim()
         binding.nameContainer.helperText = validNotBlank(name)
         val role = binding.atvRole.text.toString().trim() == resources.getString(R.string.teacher)
-        val studentId = binding.etStudentId.text.toString().trim()
-        binding.containerMssv.helperText = validNotBlank(studentId)
+        var studentId = binding.etStudentId.text.toString().trim()
+        if (studentId.isEmpty()) {studentId = "0"}
+//        binding.containerMssv.helperText = validNotBlank(studentId)
 
         val validEmail = binding.emailContainer.helperText == null
         val validPassword = binding.passwordContainer.helperText == null
